@@ -8,6 +8,7 @@ import MovingSpotlight from "./MovingSpotlight";
 import MouseTrail from "./MouseTrail";
 import FloatingParticles from "./FloatingParticles";
 import ThemeToggle from "./ThemeToggle";
+import * as gtag from "@/lib/gtag";
 
 export default function LinksPage() {
   const router = useRouter();
@@ -38,11 +39,24 @@ export default function LinksPage() {
       const mappedSource = sourceMap[source.toLowerCase()];
       if (mappedSource) {
         setSelectedSource(mappedSource);
+        // Track auto-detected source
+        gtag.event({
+          action: "source_auto_detected",
+          category: "engagement",
+          label: mappedSource,
+        });
       }
     }
   }, [searchParams]);
 
   const handleMenuClick = () => {
+    // Track menu button click
+    gtag.event({
+      action: "click",
+      category: "navigation",
+      label: "Menu",
+    });
+
     setShowSplash(true);
     // Start fade out after 1.8 seconds
     setTimeout(() => {
@@ -50,6 +64,39 @@ export default function LinksPage() {
       // Navigate immediately when fade starts
       router.push("/menu");
     }, 1800);
+  };
+
+  const handleExternalLinkClick = (linkLabel: string) => {
+    gtag.event({
+      action: "click",
+      category: "social",
+      label: linkLabel,
+    });
+  };
+
+  const handlePhoneClick = () => {
+    gtag.event({
+      action: "click",
+      category: "contact",
+      label: "Anrufen",
+    });
+  };
+
+  const handleWhatsAppClick = () => {
+    gtag.event({
+      action: "click",
+      category: "contact",
+      label: "WhatsApp",
+    });
+  };
+
+  const handleSourceSelect = (sourceId: string) => {
+    setSelectedSource(sourceId);
+    gtag.event({
+      action: "source_selected",
+      category: "engagement",
+      label: sourceId,
+    });
   };
 
   const sourceOptions = [
@@ -222,6 +269,7 @@ export default function LinksPage() {
                 if (link.isInternal && link.action) {
                   link.action();
                 } else if (link.href) {
+                  handleExternalLinkClick(link.label);
                   window.open(link.href, "_blank", "noopener,noreferrer");
                 }
               }}
@@ -250,6 +298,7 @@ export default function LinksPage() {
           {/* Phone Call */}
           <a
             href="tel:+4917623296860"
+            onClick={handlePhoneClick}
             className="w-12 h-12 rounded-full bg-[var(--card-bg)] border border-[var(--gold)]/40 flex items-center justify-center text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--bg-dark)] hover:border-[var(--gold)] transition-all duration-300"
             aria-label="Anrufen"
           >
@@ -263,6 +312,7 @@ export default function LinksPage() {
             href="https://wa.me/4917623296860"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={handleWhatsAppClick}
             className="w-12 h-12 rounded-full bg-[var(--card-bg)] border border-[#25D366]/40 flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-all duration-300"
             aria-label="WhatsApp"
           >
@@ -292,7 +342,7 @@ export default function LinksPage() {
               <button
                 key={option.id}
                 type="button"
-                onClick={() => setSelectedSource(option.id)}
+                onClick={() => handleSourceSelect(option.id)}
                 className={`relative px-4 py-2 rounded-full text-sm tracking-wider transition-all duration-300 ${
                   selectedSource === option.id
                     ? "bg-[var(--gold)] text-[var(--bg-dark)] border-2 border-[var(--gold)]"

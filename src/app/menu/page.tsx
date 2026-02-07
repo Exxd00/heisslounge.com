@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import MobileMenu from "@/components/MobileMenu";
 import { ChevronDown } from "lucide-react";
+import * as gtag from "@/lib/gtag";
 
 const categories = [
   {
@@ -60,8 +61,38 @@ const categories = [
 export default function MenuPage() {
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
 
-  const toggleAccordion = (id: string) => {
+  const toggleAccordion = (id: string, title: string) => {
+    const action = openAccordion === id ? "collapse" : "expand";
+    gtag.event({
+      action: "click",
+      category: "menu",
+      label: `${title} ${action}`,
+    });
     setOpenAccordion((prev) => (prev === id ? null : id));
+  };
+
+  const handleSubcategoryClick = (name: string) => {
+    gtag.event({
+      action: "click",
+      category: "menu",
+      label: name,
+    });
+  };
+
+  const handleSocialClick = (name: string) => {
+    gtag.event({
+      action: "click",
+      category: "social",
+      label: name,
+    });
+  };
+
+  const handleLegalClick = (name: string) => {
+    gtag.event({
+      action: "click",
+      category: "legal",
+      label: name,
+    });
   };
 
   const isOpen = (id: string) => openAccordion === id;
@@ -81,6 +112,7 @@ export default function MenuPage() {
               href="https://www.instagram.com/heiss_lounge/?utm_source=ig_web_button_share_sheet"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => handleSocialClick("Instagram")}
               className="text-[#c9a962] hover:text-white transition-colors"
               aria-label="Instagram"
             >
@@ -93,6 +125,7 @@ export default function MenuPage() {
               href="https://www.facebook.com/share/1DfMp4u2Vz/?mibextid=wwXIfr"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => handleSocialClick("Facebook")}
               className="text-[#c9a962] hover:text-white transition-colors"
               aria-label="Facebook"
             >
@@ -125,7 +158,7 @@ export default function MenuPage() {
                 {/* Accordion Header - Clickable Image Area */}
                 <button
                   type="button"
-                  onClick={() => toggleAccordion(category.id)}
+                  onClick={() => toggleAccordion(category.id, category.title)}
                   className="relative h-40 sm:h-48 w-full overflow-hidden cursor-pointer group"
                   aria-expanded={isOpen(category.id)}
                   aria-controls={`accordion-content-${category.id}`}
@@ -168,6 +201,7 @@ export default function MenuPage() {
                         <Link
                           key={sub.href}
                           href={sub.href}
+                          onClick={() => handleSubcategoryClick(sub.name)}
                           className="subcategory-link"
                         >
                           {sub.name}
@@ -203,24 +237,28 @@ export default function MenuPage() {
           <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mt-4 mb-4">
             <Link
               href="/impressum"
+              onClick={() => handleLegalClick("Impressum")}
               className="text-[#8a8a8a] hover:text-[#c9a962] text-[10px] sm:text-xs tracking-wider transition-colors"
             >
               Impressum
             </Link>
             <Link
               href="/datenschutz"
+              onClick={() => handleLegalClick("Datenschutz")}
               className="text-[#8a8a8a] hover:text-[#c9a962] text-[10px] sm:text-xs tracking-wider transition-colors"
             >
               Datenschutz
             </Link>
             <Link
               href="/agb"
+              onClick={() => handleLegalClick("AGB")}
               className="text-[#8a8a8a] hover:text-[#c9a962] text-[10px] sm:text-xs tracking-wider transition-colors"
             >
               AGB
             </Link>
             <Link
               href="/hausordnung"
+              onClick={() => handleLegalClick("Hausordnung")}
               className="text-[#8a8a8a] hover:text-[#c9a962] text-[10px] sm:text-xs tracking-wider transition-colors"
             >
               Hausordnung

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import * as gtag from "@/lib/gtag";
 
 interface MenuItem {
   name: string;
@@ -82,8 +83,42 @@ export default function MobileMenu() {
     };
   }, [isOpen]);
 
+  const handleMenuToggle = () => {
+    const action = isOpen ? "close" : "open";
+    gtag.event({
+      action: "click",
+      category: "navigation",
+      label: `Hamburger Menu ${action}`,
+    });
+    setIsOpen(!isOpen);
+  };
+
   const toggleSubmenu = (name: string) => {
+    const action = openSubmenu === name ? "collapse" : "expand";
+    gtag.event({
+      action: "click",
+      category: "navigation",
+      label: `${name} ${action}`,
+    });
     setOpenSubmenu(openSubmenu === name ? null : name);
+  };
+
+  const handleMenuItemClick = (name: string) => {
+    gtag.event({
+      action: "click",
+      category: "navigation",
+      label: name,
+    });
+    closeMenu();
+  };
+
+  const handleLegalLinkClick = (name: string) => {
+    gtag.event({
+      action: "click",
+      category: "legal",
+      label: name,
+    });
+    closeMenu();
   };
 
   const closeMenu = () => {
@@ -96,7 +131,7 @@ export default function MobileMenu() {
       {/* Hamburger Button */}
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleMenuToggle}
         className="fixed top-4 left-4 z-[60] w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-transparent"
         aria-label="Toggle menu"
       >
@@ -189,7 +224,7 @@ export default function MobileMenu() {
                         <Link
                           key={subItem.href}
                           href={subItem.href}
-                          onClick={closeMenu}
+                          onClick={() => handleMenuItemClick(subItem.name)}
                           className="block px-10 py-2.5 text-[#8a8a8a] hover:text-[#c9a962] transition-colors text-sm tracking-wider"
                         >
                           {subItem.name}
@@ -201,7 +236,7 @@ export default function MobileMenu() {
               ) : (
                 <Link
                   href={item.href}
-                  onClick={closeMenu}
+                  onClick={() => handleMenuItemClick(item.name)}
                   className="block px-6 py-3.5 text-[#c9a962] hover:text-white hover:bg-[#1a1a1a] transition-colors text-sm tracking-[0.15em] uppercase"
                 >
                   {item.name}
@@ -219,7 +254,7 @@ export default function MobileMenu() {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={closeMenu}
+                onClick={() => handleLegalLinkClick(item.name)}
                 className="block px-6 py-2.5 text-[#8a8a8a] hover:text-[#c9a962] hover:bg-[#1a1a1a] transition-colors text-xs tracking-wider"
               >
                 {item.name}

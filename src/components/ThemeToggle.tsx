@@ -2,14 +2,25 @@
 
 import { useTheme } from "./ThemeProvider";
 import { Sun, Moon } from "lucide-react";
+import * as gtag from "@/lib/gtag";
 
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
 
+  const handleToggle = () => {
+    const newTheme = theme === "dark" ? "Light Mode" : "Dark Mode";
+    gtag.event({
+      action: "click",
+      category: "settings",
+      label: newTheme,
+    });
+    toggleTheme();
+  };
+
   return (
     <button
       type="button"
-      onClick={toggleTheme}
+      onClick={handleToggle}
       className="fixed top-4 right-4 z-[60] w-12 h-12 rounded-full bg-[var(--card-bg)] border border-[var(--gold)]/40 flex items-center justify-center text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--bg-dark)] transition-all duration-300 shadow-lg backdrop-blur-sm"
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
     >

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import AppWrapper from "@/components/AppWrapper";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -44,6 +45,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" suppressHydrationWarning>
+      <head>
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-9LTN2RYHPG"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-9LTN2RYHPG');
+          `}
+        </Script>
+      </head>
       <body className="antialiased">
         <ThemeProvider>
           <AppWrapper>{children}</AppWrapper>

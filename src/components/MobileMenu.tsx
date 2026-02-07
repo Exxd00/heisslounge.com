@@ -84,39 +84,39 @@ export default function MobileMenu() {
   }, [isOpen]);
 
   const handleMenuToggle = () => {
-    const action = isOpen ? "close" : "open";
+    const actionName = isOpen ? "Menu Close" : "Menu Open";
     gtag.event({
-      action: "click",
+      action: actionName,
       category: "navigation",
-      label: `Hamburger Menu ${action}`,
+      label: `Hamburger ${actionName}`,
     });
     setIsOpen(!isOpen);
   };
 
   const toggleSubmenu = (name: string) => {
-    const action = openSubmenu === name ? "collapse" : "expand";
+    const state = openSubmenu === name ? "Close" : "Open";
     gtag.event({
-      action: "click",
+      action: `${name} ${state}`,
       category: "navigation",
-      label: `${name} ${action}`,
+      label: `${name} Submenu ${state}`,
     });
     setOpenSubmenu(openSubmenu === name ? null : name);
   };
 
   const handleMenuItemClick = (name: string) => {
     gtag.event({
-      action: "click",
+      action: name,
       category: "navigation",
-      label: name,
+      label: `${name} Clicked`,
     });
     closeMenu();
   };
 
   const handleLegalLinkClick = (name: string) => {
     gtag.event({
-      action: "click",
+      action: name,
       category: "legal",
-      label: name,
+      label: `${name} Clicked`,
     });
     closeMenu();
   };

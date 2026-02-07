@@ -26,76 +26,73 @@ export default function LinksPage() {
   useEffect(() => {
     const source = searchParams.get("ref") || searchParams.get("source");
     if (source) {
-      const sourceMap: { [key: string]: string } = {
-        web: "web",
-        instagram: "instagram",
-        ig: "instagram",
-        freunde: "freunde",
-        friends: "freunde",
-        maps: "maps",
-        google: "maps",
-        googlemaps: "maps",
+      const sourceMap: { [key: string]: { id: string; label: string } } = {
+        web: { id: "web", label: "Web" },
+        instagram: { id: "instagram", label: "Instagram" },
+        ig: { id: "instagram", label: "Instagram" },
+        freunde: { id: "freunde", label: "Freunde" },
+        friends: { id: "freunde", label: "Freunde" },
+        maps: { id: "maps", label: "Google Maps" },
+        google: { id: "maps", label: "Google Maps" },
+        googlemaps: { id: "maps", label: "Google Maps" },
       };
       const mappedSource = sourceMap[source.toLowerCase()];
       if (mappedSource) {
-        setSelectedSource(mappedSource);
+        setSelectedSource(mappedSource.id);
         // Track auto-detected source
         gtag.event({
-          action: "source_auto_detected",
-          category: "engagement",
-          label: mappedSource,
+          action: mappedSource.label,
+          category: "Wie hast du uns gefunden",
+          label: `${mappedSource.label} Auto Detected`,
         });
       }
     }
   }, [searchParams]);
 
   const handleMenuClick = () => {
-    // Track menu button click
     gtag.event({
-      action: "click",
+      action: "Menu",
       category: "navigation",
-      label: "Menu",
+      label: "Menu Button Clicked",
     });
 
     setShowSplash(true);
-    // Start fade out after 1.8 seconds
     setTimeout(() => {
       setIsFading(true);
-      // Navigate immediately when fade starts
       router.push("/menu");
     }, 1800);
   };
 
   const handleExternalLinkClick = (linkLabel: string) => {
     gtag.event({
-      action: "click",
+      action: linkLabel,
       category: "social",
-      label: linkLabel,
+      label: `${linkLabel} Button Clicked`,
     });
   };
 
   const handlePhoneClick = () => {
     gtag.event({
-      action: "click",
+      action: "Anrufen",
       category: "contact",
-      label: "Anrufen",
+      label: "Phone Button Clicked",
     });
   };
 
   const handleWhatsAppClick = () => {
     gtag.event({
-      action: "click",
+      action: "WhatsApp",
       category: "contact",
-      label: "WhatsApp",
+      label: "WhatsApp Button Clicked",
     });
   };
 
-  const handleSourceSelect = (sourceId: string) => {
+  const handleSourceSelect = (sourceId: string, sourceLabel: string) => {
     setSelectedSource(sourceId);
     gtag.event({
-      action: "source_selected",
-      category: "engagement",
-      label: sourceId,
+      action: sourceLabel,
+      category: "Wie hast du uns gefunden",
+      label: `${sourceLabel} Selected`,
     });
   };
 
@@ -342,7 +339,7 @@ export default function LinksPage() {
               <button
                 key={option.id}
                 type="button"
-                onClick={() => handleSourceSelect(option.id)}
+                onClick={() => handleSourceSelect(option.id, option.label)}
                 className={`relative px-4 py-2 rounded-full text-sm tracking-wider transition-all duration-300 ${
                   selectedSource === option.id
                     ? "bg-[var(--gold)] text-[var(--bg-dark)] border-2 border-[var(--gold)]"

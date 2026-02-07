@@ -10,9 +10,9 @@ export default function ThemeToggle() {
   const handleToggle = () => {
     const newTheme = theme === "dark" ? "Light Mode" : "Dark Mode";
     gtag.event({
-      action: "click",
+      action: newTheme,
       category: "settings",
-      label: newTheme,
+      label: `Theme Changed to ${newTheme}`,
     });
     toggleTheme();
   };

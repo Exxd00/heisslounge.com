@@ -13,9 +13,9 @@ export default function BackButton({ href = "/" }: BackButtonProps) {
 
   const handleClick = () => {
     gtag.event({
-      action: "click",
+      action: "Zurück",
       category: "navigation",
-      label: "Zurück",
+      label: "Back Button Clicked",
     });
     router.push(href);
   };

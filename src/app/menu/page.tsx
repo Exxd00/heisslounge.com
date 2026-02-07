@@ -62,36 +62,36 @@ export default function MenuPage() {
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
 
   const toggleAccordion = (id: string, title: string) => {
-    const action = openAccordion === id ? "collapse" : "expand";
+    const state = openAccordion === id ? "Close" : "Open";
     gtag.event({
-      action: "click",
+      action: `${title} ${state}`,
       category: "menu",
-      label: `${title} ${action}`,
+      label: `${title} Category ${state}`,
     });
     setOpenAccordion((prev) => (prev === id ? null : id));
   };
 
   const handleSubcategoryClick = (name: string) => {
     gtag.event({
-      action: "click",
+      action: name,
       category: "menu",
-      label: name,
+      label: `${name} Clicked`,
     });
   };
 
   const handleSocialClick = (name: string) => {
     gtag.event({
-      action: "click",
+      action: name,
       category: "social",
-      label: name,
+      label: `${name} Clicked`,
     });
   };
 
   const handleLegalClick = (name: string) => {
     gtag.event({
-      action: "click",
+      action: name,
       category: "legal",
-      label: name,
+      label: `${name} Clicked`,
     });
   };
 

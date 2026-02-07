@@ -50,6 +50,10 @@ export default function LinksPage() {
   }, [searchParams]);
 
   const handleMenuClick = () => {
+    // Log to Google Sheets
+    gtag.sendToSheets("Menu");
+
+    // Log to Google Analytics
     gtag.event({
       action: "Menu",
       category: "navigation",
@@ -64,6 +68,10 @@ export default function LinksPage() {
   };
 
   const handleExternalLinkClick = (linkLabel: string) => {
+    // Log to Google Sheets
+    gtag.sendToSheets(linkLabel);
+
+    // Log to Google Analytics
     gtag.event({
       action: linkLabel,
       category: "social",
@@ -72,6 +80,10 @@ export default function LinksPage() {
   };
 
   const handlePhoneClick = () => {
+    // Log to Google Sheets
+    gtag.sendToSheets("Anrufen");
+
+    // Log to Google Analytics
     gtag.event({
       action: "Anrufen",
       category: "contact",
@@ -80,6 +92,10 @@ export default function LinksPage() {
   };
 
   const handleWhatsAppClick = () => {
+    // Log to Google Sheets
+    gtag.sendToSheets("WhatsApp");
+
+    // Log to Google Analytics
     gtag.event({
       action: "WhatsApp",
       category: "contact",
@@ -89,6 +105,11 @@ export default function LinksPage() {
 
   const handleSourceSelect = (sourceId: string, sourceLabel: string) => {
     setSelectedSource(sourceId);
+
+    // Log to Google Sheets
+    gtag.sendToSheets(sourceLabel);
+
+    // Log to Google Analytics
     gtag.event({
       action: sourceLabel,
       category: "Wie hast du uns gefunden",

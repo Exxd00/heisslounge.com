@@ -10,26 +10,17 @@ function doPost(e) {
 
     // Add headers if sheet is empty
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        'Timestamp',
-        'Action',
-        'Category',
-        'Label',
-        'Page URL',
-        'User Agent',
-        'Session ID'
-      ]);
+      sheet.appendRow(['Date', 'Event']);
+      // Format header row
+      const headerRange = sheet.getRange(1, 1, 1, 2);
+      headerRange.setFontWeight('bold');
+      headerRange.setBackground('#c9a962');
     }
 
-    // Append the event data
+    // Append the event data (only Date and Event)
     sheet.appendRow([
-      new Date().toISOString(),
-      data.action || '',
-      data.category || '',
-      data.label || '',
-      data.page_url || '',
-      data.user_agent || '',
-      data.session_id || ''
+      data.date || new Date().toLocaleString('de-DE'),
+      data.event || ''
     ]);
 
     return ContentService
@@ -45,20 +36,32 @@ function doPost(e) {
 
 function doGet(e) {
   return ContentService
-    .createTextOutput(JSON.stringify({ status: 'Event Logger Active' }))
+    .createTextOutput(JSON.stringify({ status: 'Heiss Lounge Event Logger Active' }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
 // Test function - run this to verify the script works
 function testAppendRow() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  // Add headers if empty
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['Date', 'Event']);
+  }
+
+  // Add test row
   sheet.appendRow([
-    new Date().toISOString(),
-    'test_click',
-    'test_category',
-    'Test Button',
-    'https://heisslounge.com',
-    'Test User Agent',
-    'test-session-123'
+    new Date().toLocaleString('de-DE'),
+    'Test Event'
   ]);
+}
+
+// Clear all data (use carefully!)
+function clearSheet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  sheet.clear();
+  sheet.appendRow(['Date', 'Event']);
+  const headerRange = sheet.getRange(1, 1, 1, 2);
+  headerRange.setFontWeight('bold');
+  headerRange.setBackground('#c9a962');
 }
